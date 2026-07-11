@@ -8,11 +8,9 @@ import 'package:latlong2/latlong.dart';
 
 import '../theme/app_theme.dart';
 
-// TomTom Maps API key. Client-side map SDK keys are visible to anyone who
-// inspects network requests — that's normal for TomTom/Google/Mapbox — but
-// restrict allowed referrers/domains for this key in the TomTom developer
-// dashboard before shipping, and don't commit it to a public repo.
-const _tomTomApiKey = 'DoKfbxHo92JYsF3aSUDmhIHXN6crPHNk';
+// TomTom Maps API key. Retrieved from compile-time environment variables.
+// Run/build using: flutter run --dart-define-from-file=.env
+const _tomTomApiKey = String.fromEnvironment('TOMTOM_API_KEY');
 
 /// Real, interactive map built with flutter_map + TomTom raster tiles. Fetches
 /// the actual driving route from TomTom's Routing API so the polyline follows
