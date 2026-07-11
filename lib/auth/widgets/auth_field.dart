@@ -179,7 +179,7 @@ class AuthDropdownField<T> extends StatelessWidget {
       helperText: helperText,
       errorText: errorText,
       child: DropdownButtonFormField<T>(
-        initialValue: value,
+        value: value,
         isExpanded: true,
         icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AuthColors.textMuted),
         dropdownColor: AuthColors.modal,

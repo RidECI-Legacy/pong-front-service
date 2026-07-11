@@ -14,65 +14,90 @@ class AuthScaffold extends StatelessWidget {
 
   const AuthScaffold({super.key, required this.leftPanel, required this.card});
 
+  /// Scrolls [child] when it's taller than the viewport, otherwise centers
+  /// it within the full available height — avoids both the bottom overflow
+  /// on tall steps (e.g. the driver summary) and the top-anchored look on
+  /// short ones (e.g. login) that a plain `SingleChildScrollView` produces.
+  static Widget _centeredScrollable(Widget child) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(child: child),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AuthColors.bgDeepest,
-      body: DecoratedBox(
-        decoration: const BoxDecoration(gradient: AuthColors.pageGradient),
-        child: Stack(
-          children: [
-            Positioned(
-              top: -120,
-              left: -80,
-              child: GlowBlob(size: 420, color: AuthColors.primary, opacity: 0.22, duration: const Duration(seconds: 9)),
-            ),
-            Positioned(
-              bottom: -140,
-              right: -100,
-              child: GlowBlob(size: 480, color: AuthColors.secondaryAccent, opacity: 0.18, duration: const Duration(seconds: 11)),
-            ),
-            SafeArea(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isWide = constraints.maxWidth >= 980;
-                  final content = isWide
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 64),
-                                child: leftPanel,
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
-                                child: Center(child: card),
-                              ),
-                            ),
-                          ],
-                        )
-                      : SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const _MobileLogo(),
-                              const SizedBox(height: 24),
-                              leftPanel,
-                              const SizedBox(height: 28),
-                              card,
-                            ],
-                          ),
-                        );
-                  return content;
-                },
+      body: LayoutBuilder(
+        builder: (context, outerConstraints) {
+          return SizedBox(
+            width: outerConstraints.maxWidth,
+            height: outerConstraints.maxHeight,
+            child: DecoratedBox(
+              decoration: const BoxDecoration(gradient: AuthColors.pageGradient),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -120,
+                    left: -80,
+                    child: GlowBlob(size: 420, color: AuthColors.primary, opacity: 0.22, duration: const Duration(seconds: 9)),
+                  ),
+                  Positioned(
+                    bottom: -140,
+                    right: -100,
+                    child: GlowBlob(size: 480, color: AuthColors.secondaryAccent, opacity: 0.18, duration: const Duration(seconds: 11)),
+                  ),
+                  SafeArea(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWide = constraints.maxWidth >= 980;
+                        final content = isWide
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 64),
+                                      child: _centeredScrollable(leftPanel),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+                                      child: _centeredScrollable(card),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : SingleChildScrollView(
+                                padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const _MobileLogo(),
+                                    const SizedBox(height: 24),
+                                    leftPanel,
+                                    const SizedBox(height: 28),
+                                    card,
+                                  ],
+                                ),
+                              );
+                        return content;
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

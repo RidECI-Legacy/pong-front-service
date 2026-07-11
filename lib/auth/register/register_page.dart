@@ -253,7 +253,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (context.canPop()) {
       context.pop();
     } else {
-      context.go(AppRoutes.landing);
+      context.push(AppRoutes.login);
     }
   }
 

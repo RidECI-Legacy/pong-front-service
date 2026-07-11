@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../auth/forgot_password/forgot_password_page.dart';
+import '../auth/login/login_page.dart';
 import '../auth/register/register_page.dart';
 import '../screens/admin_screen.dart';
 import '../screens/driver_screen.dart';
@@ -14,6 +15,7 @@ class AppRoutes {
   static const passenger = '/pasajero';
   static const driver = '/conductor';
   static const admin = '/admin';
+  static const login = '/login';
   static const register = '/registro';
   static const forgotPassword = '/recuperar-password';
 }
@@ -36,6 +38,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.admin,
       builder: (context, state) => const AdminScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.login,
+      builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
       path: AppRoutes.register,

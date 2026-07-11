@@ -262,7 +262,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               AuthPrimaryButton(
                 label: 'Ir a iniciar sesión',
                 trailingIcon: Icons.arrow_forward_rounded,
-                onTap: () => context.go(AppRoutes.landing),
+                onTap: () => context.canPop()
+                    ? context.pop()
+                    : context.push(AppRoutes.login),
               ),
             ],
             const SizedBox(height: 18),
@@ -276,7 +278,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     label: 'Inicia sesión',
                     onTap: () => context.canPop()
                         ? context.pop()
-                        : context.go(AppRoutes.landing),
+                        : context.push(AppRoutes.login),
                   ),
                 ],
               ),

@@ -1,10 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../routing/app_router.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
-import 'login_dialog.dart';
 
 /// Transparent floating navbar that gains a blurred, translucent background
 /// once the page scrolls past a small threshold.
@@ -69,7 +70,7 @@ class _LandingNavbarState extends State<LandingNavbar> {
                       for (final l in LandingNavbar.links) _NavLink(label: l, onTap: widget.onNavTap),
                     ],
                   ),
-                  _LoginButton(onTap: () => showLoginDialog(context)),
+                  _LoginButton(onTap: () => context.push(AppRoutes.login)),
                 ] else
                   _MobileMenuButton(onNavTap: widget.onNavTap),
               ],
@@ -192,7 +193,7 @@ class _MobileMenuButton extends StatelessWidget {
                     width: double.infinity,
                     child: _LoginButton(onTap: () {
                       Navigator.of(context).pop();
-                      showLoginDialog(context);
+                      context.push(AppRoutes.login);
                     }),
                   ),
                 ),
