@@ -23,6 +23,12 @@ class LandingColors {
   static const Color accent = Color(0xFF22D3EE);
   static const Color success = Color(0xFF10B981);
 
+  // Status colors — used by dashboards (e.g. StatusBadge) for
+  // pending/warning and cancelled/danger states not otherwise covered by
+  // the core palette above.
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color danger = Color(0xFFF06B54);
+
   // Text.
   static const Color textPrimary = Colors.white;
   static const Color textSecondary = Colors.white70;
