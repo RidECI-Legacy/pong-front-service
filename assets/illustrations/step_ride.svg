@@ -1,0 +1,18 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- person 1 (left, blue) -->
+  <circle cx="38" cy="40" r="12" fill="#3661E0"/>
+  <path d="M18 104 C18 82, 26 68, 38 68 C50 68, 58 82, 58 104 Z" fill="#4F7CFF"/>
+  <rect x="38" y="54" width="24" height="11" rx="5.5" fill="#4F7CFF" transform="rotate(-34 38 54)"/>
+
+  <!-- person 2 (right, mint) -->
+  <circle cx="82" cy="40" r="12" fill="#0B7A5C"/>
+  <path d="M62 104 C62 82, 70 68, 82 68 C94 68, 102 82, 102 104 Z" fill="#2ED9A8"/>
+  <rect x="58" y="54" width="24" height="11" rx="5.5" fill="#2ED9A8" transform="rotate(34 82 54)"/>
+
+  <!-- high-five spark -->
+  <g fill="#F3A73F">
+    <circle cx="60" cy="38" r="3.2"/>
+    <circle cx="51" cy="46" r="2.2"/>
+    <circle cx="69" cy="46" r="2.2"/>
+  </g>
+</svg>
