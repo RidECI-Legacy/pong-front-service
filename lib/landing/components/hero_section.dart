@@ -2,12 +2,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../routing/app_router.dart';
 import '../theme/colors.dart';
 import '../theme/effects.dart';
 import '../theme/typography.dart';
 import 'glow_blob.dart';
-import 'login_dialog.dart';
 import 'phone_mockup.dart';
 
 /// The hero itself — background, particles, headline/CTAs and the floating
@@ -200,7 +201,7 @@ class _HeroCopy extends StatelessWidget {
           spacing: 16,
           runSpacing: 12,
           children: [
-            _PrimaryButton(label: 'Comenzar', onTap: () => showLoginDialog(context)),
+            _PrimaryButton(label: 'Comenzar', onTap: () => context.push(AppRoutes.register)),
             _SecondaryButton(label: 'Ver cómo funciona', onTap: onSeeHowItWorks),
           ],
         ),

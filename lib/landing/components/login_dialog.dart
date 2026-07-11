@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/auth.dart';
+import '../../routing/app_router.dart';
 import '../theme/colors.dart';
 import '../theme/effects.dart';
 import '../theme/typography.dart';
@@ -38,7 +39,8 @@ class _LoginDialogState extends State<_LoginDialog> {
   }
 
   void _submit() {
-    final result = DemoAuth.login(_emailController.text, _passwordController.text);
+    final result =
+        DemoAuth.login(_emailController.text, _passwordController.text);
     if (!result.success) {
       setState(() => _error = result.error);
       return;
@@ -67,7 +69,9 @@ class _LoginDialogState extends State<_LoginDialog> {
           radius: 24,
           child: Container(
             padding: const EdgeInsets.all(28),
-            decoration: LandingEffects.glassDecoration(radius: 24, tint: LandingColors.bgSurface.withValues(alpha: 0.92)),
+            decoration: LandingEffects.glassDecoration(
+                radius: 24,
+                tint: LandingColors.bgSurface.withValues(alpha: 0.92)),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +83,8 @@ class _LoginDialogState extends State<_LoginDialog> {
                       Text('Ingresar', style: LandingType.cardTitle(size: 22)),
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.close_rounded, color: LandingColors.textSecondary),
+                        icon: const Icon(Icons.close_rounded,
+                            color: LandingColors.textSecondary),
                       ),
                     ],
                   ),
@@ -91,7 +96,9 @@ class _LoginDialogState extends State<_LoginDialog> {
                   const SizedBox(height: 22),
                   _FieldLabel('Correo institucional'),
                   const SizedBox(height: 8),
-                  _AuthField(controller: _emailController, hint: 'nombre@mail.escuelaing.edu.co'),
+                  _AuthField(
+                      controller: _emailController,
+                      hint: 'nombre@mail.escuelaing.edu.co'),
                   const SizedBox(height: 16),
                   _FieldLabel('Contraseña'),
                   const SizedBox(height: 8),
@@ -101,32 +108,53 @@ class _LoginDialogState extends State<_LoginDialog> {
                     obscureText: _obscure,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        _obscure
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         color: LandingColors.textTertiary,
                         size: 18,
                       ),
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: _HoverLink(
+                      label: '¿Olvidaste tu contraseña?',
+                      size: 12,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        GoRouter.of(context).push(AppRoutes.forgotPassword);
+                      },
+                    ),
+                  ),
                   if (_error != null) ...[
                     const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF06B54).withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFF06B54).withValues(alpha: 0.35)),
+                        border: Border.all(
+                            color: const Color(0xFFF06B54)
+                                .withValues(alpha: 0.35)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.error_outline, size: 15, color: Color(0xFFF06B54)),
+                          const Icon(Icons.error_outline,
+                              size: 15, color: Color(0xFFF06B54)),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _error!,
-                              style: const TextStyle(color: Color(0xFFF06B54), fontSize: 12, fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                  color: Color(0xFFF06B54),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                         ],
@@ -148,7 +176,9 @@ class _LoginDialogState extends State<_LoginDialog> {
                           onTap: _submit,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: Center(child: Text('Entrar  →', style: LandingType.button())),
+                            child: Center(
+                                child: Text('Entrar  →',
+                                    style: LandingType.button())),
                           ),
                         ),
                       ),
@@ -157,8 +187,10 @@ class _LoginDialogState extends State<_LoginDialog> {
                   const SizedBox(height: 22),
                   Text(
                     'CUENTAS DE PRUEBA',
-                    style: LandingType.body(size: 10.5, color: LandingColors.textTertiary)
-                        .copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
+                    style: LandingType.body(
+                            size: 10.5, color: LandingColors.textTertiary)
+                        .copyWith(
+                            fontWeight: FontWeight.w700, letterSpacing: 1),
                   ),
                   const SizedBox(height: 10),
                   for (final account in DemoAuth.accounts)
@@ -171,22 +203,29 @@ class _LoginDialogState extends State<_LoginDialog> {
                           borderRadius: BorderRadius.circular(10),
                           onTap: () => _fillDemo(account),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: LandingColors.glassBorder),
+                              border:
+                                  Border.all(color: LandingColors.glassBorder),
                             ),
                             child: Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
                                   decoration: BoxDecoration(
-                                    color: LandingColors.accent.withValues(alpha: 0.16),
+                                    color: LandingColors.accent
+                                        .withValues(alpha: 0.16),
                                     borderRadius: BorderRadius.circular(999),
                                   ),
                                   child: Text(
                                     account.roleLabel,
-                                    style: const TextStyle(color: LandingColors.accent, fontSize: 10.5, fontWeight: FontWeight.w700),
+                                    style: const TextStyle(
+                                        color: LandingColors.accent,
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w700),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -203,6 +242,23 @@ class _LoginDialogState extends State<_LoginDialog> {
                         ),
                       ),
                     ),
+                  const SizedBox(height: 6),
+                  Center(
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        Text('¿No tienes cuenta? ',
+                            style: LandingType.body(size: 12.5)),
+                        _HoverLink(
+                          label: 'Crear cuenta',
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            GoRouter.of(context).push(AppRoutes.register);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -219,7 +275,50 @@ class _FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(label, style: LandingType.body(size: 12.5, color: LandingColors.textSecondary));
+    return Text(label,
+        style:
+            LandingType.body(size: 12.5, color: LandingColors.textSecondary));
+  }
+}
+
+/// Small inline text link ("¿Olvidaste tu contraseña?", "Crear cuenta") with
+/// a pointer cursor and hover feedback, same as any other clickable control.
+class _HoverLink extends StatefulWidget {
+  final String label;
+  final VoidCallback onTap;
+  final double size;
+
+  const _HoverLink(
+      {required this.label, required this.onTap, this.size = 12.5});
+
+  @override
+  State<_HoverLink> createState() => _HoverLinkState();
+}
+
+class _HoverLinkState extends State<_HoverLink> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 150),
+          style: TextStyle(
+            color: _hover ? LandingColors.primaryLight : LandingColors.accent,
+            fontSize: widget.size,
+            fontWeight: FontWeight.w700,
+            decoration: _hover ? TextDecoration.underline : TextDecoration.none,
+            decorationColor: LandingColors.primaryLight,
+          ),
+          child: Text(widget.label),
+        ),
+      ),
+    );
   }
 }
 
@@ -244,11 +343,13 @@ class _AuthField extends StatelessWidget {
       style: const TextStyle(color: LandingColors.textPrimary, fontSize: 13.5),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: LandingColors.textTertiary, fontSize: 13.5),
+        hintStyle:
+            const TextStyle(color: LandingColors.textTertiary, fontSize: 13.5),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.04),
         suffixIcon: suffixIcon,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: LandingColors.glassBorder),
