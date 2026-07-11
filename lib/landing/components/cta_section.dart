@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../routing/app_router.dart';
 import '../../widgets/responsive_container.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import 'glow_blob.dart';
-import 'login_dialog.dart';
 
 /// SECTION 6 — Call to action.
 class CtaSection extends StatelessWidget {
@@ -46,7 +47,7 @@ class CtaSection extends StatelessWidget {
                   runSpacing: 12,
                   alignment: WrapAlignment.center,
                   children: [
-                    _CtaPrimaryButton(label: 'Comenzar ahora', onTap: () => showLoginDialog(context)),
+                    _CtaPrimaryButton(label: 'Comenzar ahora', onTap: () => context.push(AppRoutes.register)),
                     _CtaSecondaryButton(label: 'Conocer más', onTap: onLearnMore),
                   ],
                 ),

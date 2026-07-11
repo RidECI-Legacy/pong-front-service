@@ -1,0 +1,488 @@
+# RidECI Authentication UI Prompt
+
+## Overview
+
+Design a **premium Login & Registration experience** for the Flutter application **RidECI**.
+
+The design must follow exactly the same visual language as the landing page and the mobile concept shown previously.
+
+The interface should feel like a combination of:
+
+- Apple
+- Linear
+- Rivian
+- Stripe
+- Arc Browser
+
+The experience should communicate:
+
+- Trust
+- Security
+- Modern Technology
+- Simplicity
+- Community
+
+Avoid generic Material Design login screens.
+
+Everything should feel polished and premium.
+
+---
+
+# General Style
+
+Dark Theme
+
+Large rounded corners (20-28px)
+
+Soft shadows
+
+Glassmorphism
+
+Blue neon accents
+
+Blur backgrounds
+
+Minimal borders
+
+Smooth animations
+
+Plenty of spacing
+
+Premium typography
+
+---
+
+# Color Palette
+
+Background
+
+```
+#050816
+#081321
+#0D1B2A
+```
+
+Primary
+
+```
+#2563EB
+#3B82F6
+#60A5FA
+```
+
+Accent
+
+```
+#22D3EE
+```
+
+Success
+
+```
+#10B981
+```
+
+Cards
+
+```
+#101827
+```
+
+Text
+
+```
+White
+White70
+White54
+```
+
+---
+
+# Typography
+
+Use Google Fonts.
+
+Primary
+
+Space Grotesk
+
+Secondary
+
+Inter
+
+---
+
+# Background
+
+Use the same animated background as the landing page.
+
+Include:
+
+- Animated blue gradients
+- Soft glowing circles
+- Floating blurred blobs
+- Very subtle moving particles
+- Smooth animated lighting
+
+The background should never feel static.
+
+---
+
+# LOGIN SCREEN
+
+## Layout
+
+Desktop
+
+Split layout (50 / 50)
+
+### Left Side
+
+Large branding section.
+
+Display:
+
+RidECI logo
+
+Headline
+
+```
+Bienvenido de nuevo.
+```
+
+Subtitle
+
+```
+Comparte el camino con una comunidad segura y verificada.
+```
+
+Below the text display an animated illustration.
+
+Ideas:
+
+- Floating smartphone
+- Live map
+- Route animation
+- Car moving along a glowing path
+- Soft animated blue glow
+
+---
+
+### Right Side
+
+Centered glass card.
+
+Width
+
+```
+420px
+```
+
+Rounded
+
+```
+28px
+```
+
+Glass background
+
+Blur
+
+Soft border
+
+Shadow
+
+---
+
+Inside the card
+
+Small logo
+
+```
+RidECI
+```
+
+Title
+
+```
+Iniciar sesión
+```
+
+Subtitle
+
+```
+Ingresa con tu correo institucional.
+```
+
+---
+
+Fields
+
+Email
+
+Leading icon
+
+mail
+
+Placeholder
+
+```
+correo@escuelaing.edu.co
+```
+
+Password
+
+Leading icon
+
+lock
+
+Trailing button
+
+Show / Hide password
+
+---
+
+Remember Me checkbox
+
+Forgot password button
+
+---
+
+Primary Button
+
+Large rounded button
+
+```
+Ingresar
+```
+
+Blue gradient
+
+Hover glow
+
+Ripple animation
+
+---
+
+Divider
+
+```
+────────  o  ────────
+```
+
+---
+
+Secondary Button
+
+```
+Crear una cuenta
+```
+
+Outlined glass button
+
+---
+
+Footer
+
+```
+Solo miembros de la Escuela Colombiana de Ingeniería pueden acceder.
+```
+
+Small shield icon.
+
+---
+
+# REGISTRATION SCREEN
+
+Keep exactly the same visual style.
+
+Only the content changes.
+
+---
+
+Title
+
+```
+Crear cuenta
+```
+
+Subtitle
+
+```
+Únete a la comunidad RidECI.
+```
+
+---
+
+Fields
+
+Nombre completo
+
+Correo institucional
+
+Código estudiantil (opcional para docentes)
+
+Contraseña
+
+Confirmar contraseña
+
+Rol
+
+Dropdown
+
+- Estudiante
+- Profesor
+- Administrativo
+
+---
+
+Checkbox
+
+```
+Acepto los términos y condiciones.
+```
+
+---
+
+Primary Button
+
+```
+Crear cuenta
+```
+
+---
+
+Secondary Text
+
+```
+¿Ya tienes una cuenta?
+
+Iniciar sesión
+```
+
+---
+
+# Validation States
+
+Each field should have beautiful animations.
+
+Success
+
+Green glow
+
+Check icon
+
+---
+
+Focused
+
+Blue border
+
+Blue glow
+
+---
+
+Error
+
+Soft red border
+
+Error message below
+
+Shake animation
+
+---
+
+Disabled
+
+Lower opacity
+
+---
+
+# Loading State
+
+When the user presses the login button:
+
+Button morphs into a loading capsule.
+
+Circular progress indicator.
+
+Background slightly blurs.
+
+After success:
+
+Button animates into a green check.
+
+Then navigates.
+
+---
+
+# Micro Animations
+
+Animate:
+
+- Cards appearing
+- Fields
+- Hover
+- Focus
+- Buttons
+- Icons
+- Validation
+- Page transitions
+
+Everything should feel smooth (250–350 ms).
+
+---
+
+# Mobile Layout
+
+Single column.
+
+Top:
+
+RidECI logo
+
+Animated illustration
+
+Then glass card.
+
+Bottom safe area respected.
+
+Large touch targets.
+
+Keyboard should never cover inputs.
+
+---
+
+# UX Details
+
+Use floating labels.
+
+Rounded input fields.
+
+Leading icons.
+
+Password visibility toggle.
+
+Smooth focus transitions.
+
+Animated validation.
+
+Remember last email entered.
+
+Autofill enabled.
+
+---
+
+# Final Goal
+
+The authentication flow should feel like a premium startup product rather than a university system.
+
+The user should immediately perceive RidECI as:
+
+- Safe
+- Modern
+- Reliable
+- Exclusive
+- Designed for the Escuela Colombiana de Ingeniería community.
+
+The UI quality should be comparable to apps like Linear, Notion, Revolut, Stripe, Arc Browser, and Apple.
