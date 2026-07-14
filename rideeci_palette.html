@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RidECI — Paleta de Colores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-light:#F4F5F3; --surface-light:#FFFFFF; --border-light:#E3E7E3; --text-light:#10231D; --muted-light:#5B6B65;
+    --bg-dark:#0D1117; --surface-dark:#161B22; --border-dark:#2B3341; --text-dark:#ECEFF1; --muted-dark:#93A0AB;
+    --mint:#2ED9A8; --mint-dark:#1FAE87;
+    --blue:#4F7CFF; --blue-dark:#3661E0;
+    --amber:#F3A73F; --coral:#F06B54; --violet:#8C86E0;
+    --deep-green:#111A30; --deep-green-darker:#090D1A;
+    --panel-dark:#141D38; --panel-dark-alt:#1B2647; --panel-dark-border:#1AFFFFFF;
+    --mint-deep-light:#0B7A5C; --amber-deep-light:#8A5A00; --coral-deep-light:#B33A22; --violet-deep-light:#5850B0;
+    --mint-deep-dark:#4CE6BC; --amber-deep-dark:#FFC876; --coral-deep-dark:#FF9A82; --violet-deep-dark:#B8B3F5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:64px 32px 96px; background:var(--bg-light); color:var(--text-light);
+    font-family:'Inter',sans-serif; transition:background .3s, color .3s;
+  }
+  body.dark{ background:var(--bg-dark); color:var(--text-dark); }
+  h1{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:40px; margin:0 0 8px; }
+  .subtitle{ color:var(--muted-light); margin:0 0 40px; font-size:16px; }
+  body.dark .subtitle{ color:var(--muted-dark); }
+  header{ display:flex; justify-content:space-between; align-items:flex-start; max-width:1120px; margin:0 auto 48px; }
+  .toggle{
+    border:1px solid var(--border-light); background:var(--surface-light); color:inherit;
+    border-radius:999px; padding:10px 20px; font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
+    cursor:pointer; transition:all .2s;
+  }
+  body.dark .toggle{ border-color:var(--border-dark); background:var(--surface-dark); }
+  .toggle:hover{ transform:translateY(-1px); }
+  main{ max-width:1120px; margin:0 auto; }
+  section{ margin-bottom:48px; }
+  h2{ font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:600; margin:0 0 20px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; }
+  .swatch{
+    border-radius:20px; overflow:hidden; border:1px solid var(--border-light);
+    background:var(--surface-light); transition:transform .25s, box-shadow .25s;
+  }
+  body.dark .swatch{ border-color:var(--border-dark); background:var(--surface-dark); }
+  .swatch:hover{ transform:translateY(-4px); box-shadow:0 20px 40px -20px rgba(0,0,0,.25); }
+  .swatch .color{ height:96px; }
+  .swatch .info{ padding:14px 16px; }
+  .swatch .name{ font-weight:600; font-size:14px; margin:0 0 4px; }
+  .swatch .hex{ font-size:13px; color:var(--muted-light); margin:0; font-family:monospace; }
+  body.dark .swatch .hex{ color:var(--muted-dark); }
+  footer{ max-width:1120px; margin:64px auto 0; font-size:13px; color:var(--muted-light); }
+  body.dark footer{ color:var(--muted-dark); }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>RidECI</h1>
+    <p class="subtitle">Paleta de colores extraída de <code>lib/theme/app_theme.dart</code></p>
+  </div>
+  <button class="toggle" onclick="document.body.classList.toggle('dark'); this.textContent = document.body.classList.contains('dark') ? '☀ Modo claro' : '🌙 Modo oscuro'">🌙 Modo oscuro</button>
+</header>
+<main>
+
+  <section>
+    <h2>Marca</h2>
+    <div class="grid">
+      <div class="swatch"><div class="color" style="background:var(--mint)"></div><div class="info"><p class="name">Mint</p><p class="hex">#2ED9A8</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--mint-dark)"></div><div class="info"><p class="name">Mint Dark</p><p class="hex">#1FAE87</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--blue)"></div><div class="info"><p class="name">Blue Accent</p><p class="hex">#4F7CFF</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--blue-dark)"></div><div class="info"><p class="name">Blue Accent Dark</p><p class="hex">#3661E0</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Acentos</h2>
+    <div class="grid">
+      <div class="swatch"><div class="color" style="background:var(--amber)"></div><div class="info"><p class="name">Amber</p><p class="hex">#F3A73F</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--coral)"></div><div class="info"><p class="name">Coral</p><p class="hex">#F06B54</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--violet)"></div><div class="info"><p class="name">Violet</p><p class="hex">#8C86E0</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Navy fija (sin cambio por tema)</h2>
+    <div class="grid">
+      <div class="swatch"><div class="color" style="background:var(--deep-green)"></div><div class="info"><p class="name">Deep Green</p><p class="hex">#111A30</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--deep-green-darker)"></div><div class="info"><p class="name">Deep Green Darker</p><p class="hex">#090D1A</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--panel-dark)"></div><div class="info"><p class="name">Panel Dark</p><p class="hex">#141D38</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--panel-dark-alt)"></div><div class="info"><p class="name">Panel Dark Alt</p><p class="hex">#1B2647</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Superficie y texto (adaptable — claro / oscuro)</h2>
+    <div class="grid">
+      <div class="swatch"><div class="color" style="background:var(--bg-light)"></div><div class="info"><p class="name">Background (light)</p><p class="hex">#F4F5F3</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--bg-dark)"></div><div class="info"><p class="name">Background (dark)</p><p class="hex">#0D1117</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--surface-light)"></div><div class="info"><p class="name">Surface (light)</p><p class="hex">#FFFFFF</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--surface-dark)"></div><div class="info"><p class="name">Surface (dark)</p><p class="hex">#161B22</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--border-light)"></div><div class="info"><p class="name">Border (light)</p><p class="hex">#E3E7E3</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--border-dark)"></div><div class="info"><p class="name">Border (dark)</p><p class="hex">#2B3341</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--text-light)"></div><div class="info"><p class="name">Text (light)</p><p class="hex">#10231D</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--text-dark)"></div><div class="info"><p class="name">Text (dark)</p><p class="hex">#ECEFF1</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Variantes "deep" (contraste de texto — claro / oscuro)</h2>
+    <div class="grid">
+      <div class="swatch"><div class="color" style="background:var(--mint-deep-light)"></div><div class="info"><p class="name">Mint Deep (light)</p><p class="hex">#0B7A5C</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--mint-deep-dark)"></div><div class="info"><p class="name">Mint Deep (dark)</p><p class="hex">#4CE6BC</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--amber-deep-light)"></div><div class="info"><p class="name">Amber Deep (light)</p><p class="hex">#8A5A00</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--amber-deep-dark)"></div><div class="info"><p class="name">Amber Deep (dark)</p><p class="hex">#FFC876</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--coral-deep-light)"></div><div class="info"><p class="name">Coral Deep (light)</p><p class="hex">#B33A22</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--coral-deep-dark)"></div><div class="info"><p class="name">Coral Deep (dark)</p><p class="hex">#FF9A82</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--violet-deep-light)"></div><div class="info"><p class="name">Violet Deep (light)</p><p class="hex">#5850B0</p></div></div>
+      <div class="swatch"><div class="color" style="background:var(--violet-deep-dark)"></div><div class="info"><p class="name">Violet Deep (dark)</p><p class="hex">#B8B3F5</p></div></div>
+    </div>
+  </section>
+
+</main>
+<footer>Fuente: <code>AppColors</code> en <code>lib/theme/app_theme.dart</code> · Tipografías: Space Grotesk (headings) / Inter (body), según DesignSystem.md.</footer>
+</body>
+</html>

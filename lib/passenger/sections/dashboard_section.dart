@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../data/models.dart';
-import '../components/community_rating_card.dart';
 import '../components/dashboard_hero.dart';
+import '../components/dashboard_insights_tabs.dart';
 import '../components/favorite_driver_card.dart';
+import '../components/live_map_card.dart';
 import '../components/loading_skeleton.dart';
 import '../components/nearby_trips_section.dart';
 import '../components/notification_card.dart';
 import '../components/passenger_search_card.dart';
 import '../components/quick_actions_grid.dart';
 import '../components/reservation_card.dart';
-import '../components/security_card.dart';
-import '../components/statistic_card.dart';
 import '../components/trip_card.dart';
 import '../passenger_actions.dart';
 import '../passenger_mock_helpers.dart';
@@ -43,6 +42,14 @@ class DashboardSection extends StatefulWidget {
 }
 
 class _DashboardSectionState extends State<DashboardSection> {
+  final _mapKey = GlobalKey();
+
+  void _scrollToMap() {
+    final ctx = _mapKey.currentContext;
+    if (ctx == null) return;
+    Scrollable.ensureVisible(ctx, duration: const Duration(milliseconds: 350), curve: Curves.easeOutCubic, alignment: 0.08);
+  }
+
   @override
   Widget build(BuildContext context) {
     final favorites = PassengerMockHelpers.favoriteDrivers();
@@ -68,12 +75,22 @@ class _DashboardSectionState extends State<DashboardSection> {
           onChat: () => showTripChatDialog(context, withName: widget.activeTrip.driverName),
           onEmergency: () => showEmergencyDialog(context),
         ),
+        const SizedBox(height: 20),
+        LiveMapCard(
+          key: _mapKey,
+          driverName: widget.activeTrip.driverName,
+          originLabel: 'Portal 80',
+          destinationLabel: 'Escuela Ing. Julio Garavito',
+          etaMinutes: widget.activeTrip.etaMinutes,
+          progress: 0.32,
+          onExpand: () => widget.onNavigate(PassengerSection.reservations),
+        ),
         const SizedBox(height: 36),
         _SectionHeader(title: 'Acciones rápidas'),
         const SizedBox(height: 16),
         QuickActionsGrid(actions: [
           QuickAction(icon: Icons.search_rounded, label: 'Buscar viaje', accent: LandingColors.accent, onTap: () => widget.onNavigate(PassengerSection.search)),
-          QuickAction(icon: Icons.map_rounded, label: 'Ver mapa', accent: LandingColors.primaryLight, onTap: () => showActionSnack(context, 'Abriendo mapa en vivo…', icon: Icons.map_rounded)),
+          QuickAction(icon: Icons.map_rounded, label: 'Ver mapa', accent: LandingColors.primaryLight, onTap: _scrollToMap),
           QuickAction(icon: Icons.star_rounded, label: 'Conductores favoritos', accent: const Color(0xFFFBBF24), onTap: () => widget.onNavigate(PassengerSection.favorites)),
           QuickAction(icon: Icons.sos_rounded, label: 'Emergencia', accent: LandingColors.danger, onTap: () => showEmergencyDialog(context)),
           QuickAction(icon: Icons.call_rounded, label: 'Contactar conductor', accent: LandingColors.success, onTap: () => showTripChatDialog(context, withName: widget.activeTrip.driverName)),
@@ -88,15 +105,16 @@ class _DashboardSectionState extends State<DashboardSection> {
               _SectionHeader(title: 'Conductores favoritos', actionLabel: 'Ver todos', onAction: () => widget.onNavigate(PassengerSection.favorites)),
               const SizedBox(height: 16),
               SizedBox(
-                height: 210,
+                height: 336,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: favorites.length,
                   separatorBuilder: (context, i) => const SizedBox(width: 14),
                   itemBuilder: (context, i) => FavoriteDriverCard(
-                    driver: favorites[i],
-                    tripsTogether: 5 + i * 3,
+                    entry: favorites[i],
                     onViewProfile: () => widget.onNavigate(PassengerSection.favorites),
+                    onMessage: () => showTripChatDialog(context, withName: favorites[i].driver.driverName),
+                    onToggleFavorite: () => widget.onNavigate(PassengerSection.favorites),
                   ),
                 ),
               ),
@@ -128,39 +146,13 @@ class _DashboardSectionState extends State<DashboardSection> {
           );
         }),
         const SizedBox(height: 36),
-        LayoutBuilder(builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 900;
-          final rating = CommunityRatingCard(
-            rating: widget.rider.rating,
-            completedRides: widget.rider.trips,
-            reviews: const [
-              ReviewSnippet(author: 'Camilo Rojas', rating: 5, comment: 'Excelente pasajera, muy puntual.'),
-              ReviewSnippet(author: 'Valentina Ruiz', rating: 4.8, comment: 'Buena comunicación durante el viaje.'),
-            ],
-          );
-          final security = SecurityCard(
-            onEmergency: () => showEmergencyDialog(context),
-            onReport: () => widget.onNavigate(PassengerSection.security),
-            onOpenCenter: () => widget.onNavigate(PassengerSection.security),
-          );
-          if (isMobile) {
-            return Column(children: [rating, const SizedBox(height: 24), security]);
-          }
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Expanded(child: rating), const SizedBox(width: 24), Expanded(child: security)],
-          );
-        }),
-        const SizedBox(height: 36),
-        StatisticCard(
-          title: 'Tu impacto sostenible',
-          icon: Icons.eco_rounded,
-          stats: [
-            StatEntry(icon: Icons.eco_rounded, value: widget.rider.co2Kg, suffix: 'kg', label: 'CO₂ ahorrado'),
-            StatEntry(icon: Icons.savings_rounded, value: widget.rider.savedCop ~/ 1000, suffix: 'k', label: 'Dinero ahorrado'),
-            StatEntry(icon: Icons.directions_car_rounded, value: widget.rider.trips, label: 'Viajes compartidos'),
-            StatEntry(icon: Icons.groups_rounded, value: 412, suffix: '+', label: 'Comunidad activa'),
-          ],
+        _SectionHeader(title: 'Tu actividad'),
+        const SizedBox(height: 16),
+        DashboardInsightsTabs(
+          rider: widget.rider,
+          onEmergency: () => showEmergencyDialog(context),
+          onReport: () => widget.onNavigate(PassengerSection.security),
+          onOpenSecurityCenter: () => widget.onNavigate(PassengerSection.security),
         ),
         const SizedBox(height: 36),
         _SectionHeader(title: 'Viajes cercanos'),

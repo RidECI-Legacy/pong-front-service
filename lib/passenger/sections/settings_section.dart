@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../components/glass_card.dart';
+import '../components/section_title.dart';
 import '../theme.dart';
 
 /// SECTION "Configuración": lightweight preference toggles. No detailed
@@ -23,8 +24,8 @@ class _SettingsSectionState extends State<SettingsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Configuración', style: LandingType.cardTitle(size: 18)),
-        const SizedBox(height: 16),
+        const SectionTitle(icon: Icons.settings_rounded, title: 'Configuración', subtitle: 'Notificaciones y privacidad', accent: LandingColors.textSecondary),
+        const SizedBox(height: 20),
         GlassCard(
           radius: 20,
           child: Column(

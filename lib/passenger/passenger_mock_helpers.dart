@@ -1,5 +1,7 @@
+import '../data/car_colors.dart';
 import '../data/mock_data.dart';
 import '../data/models.dart';
+import 'components/favorite_driver_card.dart';
 import 'components/history_table.dart';
 import 'components/nearby_trips_section.dart';
 import 'components/status_badge.dart';
@@ -49,9 +51,49 @@ class PassengerMockHelpers {
     return rows;
   }
 
-  static List<TripOffer> favoriteDrivers() {
-    final sorted = [...MockData.availableTrips]..sort((a, b) => b.rating.compareTo(a.rating));
-    return sorted.take(2).toList();
+  /// Favorite drivers shown on "Favoritos" and the dashboard preview.
+  /// Reuses the real available-trip drivers and adds one synthetic entry so
+  /// the list is rich enough to demonstrate search/sort without touching
+  /// the core mock data layer.
+  static List<FavoriteDriverEntry> favoriteDrivers() {
+    final extra = MockData.availableTrips.first;
+    final julian = TripOffer(
+      driverName: 'Julián Torres',
+      rating: 4.7,
+      car: 'Mazda 2 Sedán',
+      carColor: CarColor.green,
+      origin: extra.origin,
+      destination: extra.destination,
+      time: '7:20 AM',
+      seats: 2,
+      price: 4200,
+    );
+
+    final entries = [
+      ...MockData.availableTrips,
+      julian,
+    ].map((driver) {
+      final tripsTogether = switch (driver.driverName) {
+        'Andrés Peña' => 14,
+        'Camilo Rojas' => 11,
+        'Julián Torres' => 6,
+        _ => 4,
+      };
+      final lastTripLabel = switch (driver.driverName) {
+        'Camilo Rojas' => 'Hoy',
+        'Andrés Peña' => 'Hace 2 días',
+        'Julián Torres' => 'Hace 1 semana',
+        _ => 'Hace 2 semanas',
+      };
+      final badge = driver.rating >= 4.9
+          ? 'Conductor confiable'
+          : (tripsTogether >= 10 ? 'Conductor frecuente' : null);
+      final onlineNow = driver.driverName == 'Camilo Rojas' || driver.driverName == 'Andrés Peña';
+      return FavoriteDriverEntry(driver: driver, tripsTogether: tripsTogether, lastTripLabel: lastTripLabel, badge: badge, onlineNow: onlineNow);
+    }).toList();
+
+    entries.sort((a, b) => b.driver.rating.compareTo(a.driver.rating));
+    return entries;
   }
 
   static List<NearbyTrip> nearbyTrips() {

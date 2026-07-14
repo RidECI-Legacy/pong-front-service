@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../data/mock_data.dart';
 import '../../data/models.dart';
 import '../components/empty_state.dart';
 import '../components/passenger_search_card.dart';
+import '../components/section_title.dart';
 import '../components/trip_card.dart';
 import '../passenger_actions.dart';
 import '../theme.dart';
@@ -32,6 +34,8 @@ class _SearchSectionState extends State<SearchSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SectionTitle(icon: Icons.search_rounded, title: 'Buscar viajes', subtitle: 'Encuentra un cupo que coincida con tu ruta y horario'),
+        const SizedBox(height: 20),
         PassengerSearchCard(
           onSearch: (criteria) => setState(() => _query = criteria.origin),
         ),
@@ -39,8 +43,8 @@ class _SearchSectionState extends State<SearchSection> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Viajes disponibles', style: LandingType.cardTitle(size: 18)),
-            Text('${results.length} resultados', style: LandingType.body(size: 12, color: LandingColors.textTertiary)),
+            Text('Viajes disponibles', style: LandingType.cardTitle(size: 16)),
+            Text('${results.length} resultado${results.length == 1 ? '' : 's'}', style: LandingType.body(size: 12, color: LandingColors.textTertiary)),
           ],
         ),
         const SizedBox(height: 16),
@@ -64,11 +68,11 @@ class _SearchSectionState extends State<SearchSection> {
               spacing: gap,
               runSpacing: gap,
               children: [
-                for (final trip in results)
+                for (var i = 0; i < results.length; i++)
                   SizedBox(
                     width: cardWidth,
-                    child: TripCard(trip: trip, onReserve: () => showActionSnack(context, 'Cupo reservado con ${trip.driverName}.')),
-                  ),
+                    child: TripCard(trip: results[i], onReserve: () => showActionSnack(context, 'Cupo reservado con ${results[i].driverName}.')),
+                  ).animate(delay: (30 * i).ms).fadeIn(duration: 280.ms).slideY(begin: 0.06, curve: Curves.easeOutCubic),
               ],
             );
           }),

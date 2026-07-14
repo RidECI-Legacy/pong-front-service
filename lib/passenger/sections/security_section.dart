@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/mock_data.dart';
 import '../components/glass_card.dart';
+import '../components/section_title.dart';
 import '../components/security_card.dart';
 import '../passenger_actions.dart';
 import '../theme.dart';
@@ -17,8 +18,8 @@ class SecuritySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Centro de Seguridad', style: LandingType.cardTitle(size: 18)),
-        const SizedBox(height: 16),
+        const SectionTitle(icon: Icons.shield_rounded, title: 'Centro de seguridad', subtitle: 'Emergencia, reportes y consejos de seguridad', accent: LandingColors.primaryLight),
+        const SizedBox(height: 20),
         LayoutBuilder(builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 900;
           final security = SecurityCard(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../data/mock_data.dart';
 import '../../data/models.dart';
@@ -45,7 +46,7 @@ class ProfileSection extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        ).animate().fadeIn(duration: 320.ms).slideY(begin: 0.06, curve: Curves.easeOutCubic),
         const SizedBox(height: 24),
         Text('Distintivos', style: LandingType.cardTitle(size: 16)),
         const SizedBox(height: 14),
@@ -57,7 +58,7 @@ class ProfileSection extends StatelessWidget {
             spacing: gap,
             runSpacing: gap,
             children: [
-              for (final d in MockData.passengerDistintivos)
+              for (final indexed in MockData.passengerDistintivos.asMap().entries)
                 SizedBox(
                   width: width,
                   child: GlassCard(
@@ -70,7 +71,7 @@ class ProfileSection extends StatelessWidget {
                           height: 38,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(color: LandingColors.warning.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)),
-                          child: Icon(d.icon, size: 18, color: LandingColors.warning),
+                          child: Icon(indexed.value.icon, size: 18, color: LandingColors.warning),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -78,15 +79,15 @@ class ProfileSection extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(d.label, style: LandingType.cardTitle(size: 12.5)),
-                              Text(d.description, style: LandingType.body(size: 11, color: LandingColors.textTertiary)),
+                              Text(indexed.value.label, style: LandingType.cardTitle(size: 12.5)),
+                              Text(indexed.value.description, style: LandingType.body(size: 11, color: LandingColors.textTertiary)),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
+                ).animate(delay: (60 * indexed.key).ms).fadeIn(duration: 280.ms).slideY(begin: 0.06, curve: Curves.easeOutCubic),
             ],
           );
         }),

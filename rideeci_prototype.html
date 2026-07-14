@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RidECI — Prototipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117; --surface:#161B22; --surface-2:#1B2230; --border:#2B3341;
+    --text:#ECEFF1; --muted:#93A0AB;
+    --mint:#2ED9A8; --mint-dark:#1FAE87;
+    --blue:#4F7CFF; --blue-dark:#3661E0;
+    --amber:#F3A73F; --coral:#F06B54; --violet:#8C86E0;
+    --radius-card:20px; --radius-btn:14px; --radius-input:14px; --radius-badge:999px;
+  }
+  body.light{
+    --bg:#F4F5F3; --surface:#FFFFFF; --surface-2:#F7F8F6; --border:#E3E7E3;
+    --text:#10231D; --muted:#5B6B65;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;
+    transition:background .25s, color .25s;
+  }
+  h1,h2,h3,h4{ font-family:'Space Grotesk',sans-serif; margin:0; }
+  button{ font-family:'Inter',sans-serif; cursor:pointer; }
+  input,select,textarea{ font-family:'Inter',sans-serif; }
+  ::selection{ background:var(--mint); color:#0D1117; }
+
+  /* ---------- AUTH VIEW ---------- */
+  #auth-view{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .auth-card{
+    width:100%; max-width:420px; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-card); padding:40px 32px; box-shadow:0 20px 60px -20px rgba(0,0,0,.4);
+    animation:fadeSlide .3s ease;
+  }
+  @keyframes fadeSlide{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
+  .auth-logo{ display:flex; align-items:center; gap:10px; margin-bottom:28px; }
+  .auth-logo .dot{ width:32px; height:32px; border-radius:10px; background:linear-gradient(135deg,var(--mint),var(--blue)); }
+  .auth-logo span{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; }
+  .auth-card h2{ font-size:24px; margin-bottom:6px; }
+  .auth-card .sub{ color:var(--muted); font-size:14px; margin-bottom:24px; }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:13px; font-weight:500; margin-bottom:6px; color:var(--muted); }
+  .field input, .field select{
+    width:100%; height:48px; border-radius:var(--radius-input); border:1px solid var(--border);
+    background:var(--surface-2); color:var(--text); padding:0 14px; font-size:14px; outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--mint); box-shadow:0 0 0 3px rgba(46,217,168,.18); }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .btn{
+    border:none; border-radius:var(--radius-btn); font-weight:600; font-size:14px;
+    padding:0 20px; height:48px; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    transition:transform .15s, box-shadow .2s, opacity .2s;
+  }
+  .btn:active{ transform:scale(.98); }
+  .btn-primary{ background:var(--mint); color:#052018; width:100%; }
+  .btn-primary:hover{ box-shadow:0 8px 24px -8px rgba(46,217,168,.5); transform:translateY(-1px); }
+  .btn-secondary{ background:transparent; border:1px solid var(--border); color:var(--text); }
+  .btn-secondary:hover{ background:var(--surface-2); }
+  .btn-ghost{ background:transparent; color:var(--muted); }
+  .btn-ghost:hover{ color:var(--text); }
+  .btn-sm{ height:36px; padding:0 14px; font-size:13px; border-radius:10px; }
+  .auth-switch{ text-align:center; margin-top:20px; font-size:13px; color:var(--muted); }
+  .auth-switch a{ color:var(--mint); text-decoration:none; font-weight:600; cursor:pointer; }
+  #register-form{ display:none; }
+
+  /* ---------- APP SHELL ---------- */
+  #app-view{ display:none; min-height:100vh; }
+  .shell{ display:grid; grid-template-columns:250px 1fr; min-height:100vh; }
+  .sidebar{
+    background:var(--surface); border-right:1px solid var(--border); padding:24px 16px;
+    display:flex; flex-direction:column; gap:24px;
+  }
+  .sidebar .brand{ display:flex; align-items:center; gap:10px; padding:0 8px; }
+  .sidebar .brand .dot{ width:28px; height:28px; border-radius:9px; background:linear-gradient(135deg,var(--mint),var(--blue)); }
+  .sidebar .brand span{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; }
+  .role-switch{ display:flex; background:var(--surface-2); border-radius:var(--radius-btn); padding:4px; gap:4px; }
+  .role-switch button{
+    flex:1; border:none; background:transparent; color:var(--muted); font-size:12px; font-weight:600;
+    padding:8px 4px; border-radius:10px; transition:all .2s;
+  }
+  .role-switch button.active{ background:var(--mint); color:#052018; }
+  nav.navlist{ display:flex; flex-direction:column; gap:4px; }
+  nav.navlist button{
+    display:flex; align-items:center; gap:10px; text-align:left; border:none; background:transparent;
+    color:var(--muted); font-size:14px; font-weight:500; padding:11px 12px; border-radius:12px; transition:all .2s;
+  }
+  nav.navlist button:hover{ background:var(--surface-2); color:var(--text); }
+  nav.navlist button.active{ background:rgba(46,217,168,.12); color:var(--mint); }
+  .navlist .ic{ width:8px; height:8px; border-radius:3px; background:currentColor; opacity:.6; }
+  .sidebar-foot{ margin-top:auto; display:flex; flex-direction:column; gap:8px; }
+
+  .main{ display:flex; flex-direction:column; }
+  .topbar{
+    height:72px; border-bottom:1px solid var(--border); display:flex; align-items:center;
+    justify-content:space-between; padding:0 28px; background:var(--surface);
+  }
+  .topbar .search{
+    display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--border);
+    border-radius:var(--radius-badge); padding:0 16px; height:40px; width:280px; color:var(--muted); font-size:13px;
+  }
+  .topbar .actions{ display:flex; align-items:center; gap:16px; }
+  .avatar{
+    width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--violet),var(--blue));
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff;
+  }
+  .bell{ width:36px; height:36px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); position:relative; }
+  .bell::after{ content:''; position:absolute; top:8px; right:9px; width:7px; height:7px; border-radius:50%; background:var(--coral); }
+  .content{ padding:32px; flex:1; overflow-y:auto; }
+  .page{ display:none; animation:fadeSlide .25s ease; }
+  .page.active{ display:block; }
+  .page-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+  .page-head h1{ font-size:26px; }
+  .page-head p{ color:var(--muted); font-size:14px; margin-top:4px; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-card);
+    padding:24px; transition:transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .card:hover{ border-color:rgba(46,217,168,.4); box-shadow:0 12px 30px -18px rgba(0,0,0,.5); }
+  .grid{ display:grid; gap:20px; }
+  .grid-3{ grid-template-columns:repeat(3,1fr); }
+  .grid-2{ grid-template-columns:repeat(2,1fr); }
+  @media(max-width:900px){ .grid-3,.grid-2{ grid-template-columns:1fr; } .shell{ grid-template-columns:1fr; } .sidebar{ display:none; } }
+
+  .stat-card .label{ color:var(--muted); font-size:13px; font-weight:500; }
+  .stat-card .value{ font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; margin:8px 0 4px; }
+  .stat-card .trend{ font-size:12px; font-weight:600; }
+  .trend.up{ color:var(--mint); }
+  .bar-chart{ display:flex; align-items:flex-end; gap:6px; height:64px; margin-top:16px; }
+  .bar-chart div{ flex:1; background:linear-gradient(180deg,var(--mint),var(--mint-dark)); border-radius:4px 4px 0 0; opacity:.85; }
+
+  .filters{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+  .filters select, .filters input{
+    height:44px; border-radius:var(--radius-input); border:1px solid var(--border); background:var(--surface);
+    color:var(--text); padding:0 14px; font-size:13px;
+  }
+
+  .trip-card{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-card); margin-bottom:14px;
+    flex-wrap:wrap;
+  }
+  .trip-card:hover{ border-color:rgba(46,217,168,.4); }
+  .trip-info{ display:flex; align-items:center; gap:14px; }
+  .trip-route{ font-weight:600; font-size:15px; }
+  .trip-meta{ color:var(--muted); font-size:13px; margin-top:4px; display:flex; gap:10px; flex-wrap:wrap; }
+  .badge{
+    display:inline-flex; align-items:center; padding:4px 12px; border-radius:var(--radius-badge);
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+  }
+  .badge-mint{ background:rgba(46,217,168,.15); color:var(--mint); }
+  .badge-amber{ background:rgba(243,167,63,.15); color:var(--amber); }
+  .badge-coral{ background:rgba(240,107,84,.15); color:var(--coral); }
+  .badge-blue{ background:rgba(79,124,255,.15); color:var(--blue); }
+  .badge-violet{ background:rgba(140,134,224,.15); color:var(--violet); }
+
+  table{ width:100%; border-collapse:collapse; }
+  th{ text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); padding:0 12px 12px; font-weight:600; }
+  td{ padding:14px 12px; border-top:1px solid var(--border); font-size:14px; }
+  tr:hover td{ background:var(--surface-2); }
+  .table-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-card); padding:8px 16px 16px; overflow-x:auto; }
+
+  .empty{ text-align:center; padding:60px 20px; color:var(--muted); }
+  .empty .ic{ font-size:32px; margin-bottom:10px; }
+
+  .fab{
+    position:fixed; bottom:28px; right:28px; display:flex; flex-direction:column; gap:12px; z-index:20;
+  }
+  .fab button{
+    width:52px; height:52px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center;
+    font-size:20px; box-shadow:0 12px 24px -8px rgba(0,0,0,.5); transition:transform .2s;
+  }
+  .fab button:hover{ transform:translateY(-3px); }
+  .fab .chat{ background:var(--blue); color:#fff; }
+  .fab .emergency{ background:var(--coral); color:#fff; }
+
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); align-items:center; justify-content:center; z-index:50;
+  }
+  .modal-backdrop.active{ display:flex; }
+  .modal{
+    background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:28px;
+    width:100%; max-width:400px; animation:fadeSlide .2s ease;
+  }
+  .modal h3{ font-size:18px; margin-bottom:16px; }
+  .payment-opts{ display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .payment-opts label{
+    display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid var(--border);
+    border-radius:var(--radius-input); font-size:14px; cursor:pointer;
+  }
+  .payment-opts input{ accent-color:var(--mint); }
+  .stars{ display:flex; gap:6px; font-size:26px; margin:12px 0; color:var(--border); }
+  .stars span{ cursor:pointer; }
+  .stars span.on{ color:var(--amber); }
+
+  .toggle-mode{
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px;
+    width:36px; height:36px; font-size:15px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH VIEW ============ -->
+<div id="auth-view">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="dot"></div><span>RidECI</span></div>
+
+    <form id="login-form">
+      <h2>Bienvenido de nuevo</h2>
+      <p class="sub">Ingresa con tu correo institucional</p>
+      <div class="field"><label>Correo institucional</label><input type="email" placeholder="nombre@mail.escuelaing.edu.co" required></div>
+      <div class="field"><label>Contraseña</label><input type="password" placeholder="••••••••" required></div>
+      <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+      <div class="auth-switch"><a onclick="return false;" style="display:block;margin-bottom:10px;">¿Olvidaste tu contraseña?</a>¿No tienes cuenta? <a onclick="showRegister()">Regístrate</a></div>
+    </form>
+
+    <form id="register-form">
+      <h2>Crear cuenta</h2>
+      <p class="sub">Usa tu correo @escuelaing.edu.co</p>
+      <div class="row-2">
+        <div class="field"><label>Nombre completo</label><input type="text" required></div>
+        <div class="field"><label>Cédula</label><input type="text" required></div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>Rol</label>
+          <select><option>Pasajero</option><option>Conductor</option><option>Acompañante</option></select>
+        </div>
+        <div class="field"><label>Teléfono</label><input type="tel" required></div>
+      </div>
+      <div class="field"><label>Correo institucional</label><input type="email" placeholder="nombre@mail.escuelaing.edu.co" required></div>
+      <div class="field"><label>Contraseña</label><input type="password" required></div>
+      <button type="submit" class="btn btn-primary">Crear cuenta</button>
+      <div class="auth-switch">¿Ya tienes cuenta? <a onclick="showLogin()">Inicia sesión</a></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP VIEW ============ -->
+<div id="app-view">
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="dot"></div><span>RidECI</span></div>
+
+      <div class="role-switch">
+        <button class="active" onclick="setRole('passenger', this)">Pasajero</button>
+        <button onclick="setRole('driver', this)">Conductor</button>
+        <button onclick="setRole('admin', this)">Admin</button>
+      </div>
+
+      <nav class="navlist" id="nav-passenger">
+        <button class="active" onclick="showPage('passenger-search', this)"><span class="ic"></span>Buscar viajes</button>
+        <button onclick="showPage('passenger-reservations', this)"><span class="ic"></span>Mis reservas</button>
+        <button onclick="showPage('passenger-profile', this)"><span class="ic"></span>Mi perfil</button>
+      </nav>
+
+      <nav class="navlist" id="nav-driver" style="display:none">
+        <button class="active" onclick="showPage('driver-trips', this)"><span class="ic"></span>Mis viajes</button>
+        <button onclick="showPage('driver-create', this)"><span class="ic"></span>Crear viaje</button>
+        <button onclick="showPage('driver-vehicle', this)"><span class="ic"></span>Mi vehículo</button>
+      </nav>
+
+      <nav class="navlist" id="nav-admin" style="display:none">
+        <button class="active" onclick="showPage('admin-validate', this)"><span class="ic"></span>Validar usuarios</button>
+        <button onclick="showPage('admin-trips', this)"><span class="ic"></span>Viajes activos</button>
+        <button onclick="showPage('admin-reports', this)"><span class="ic"></span>Reportes</button>
+        <button onclick="showPage('admin-stats', this)"><span class="ic"></span>Estadísticas</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <button class="toggle-mode" onclick="document.body.classList.toggle('light')" title="Cambiar tema">◐</button>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="search">🔍 Buscar en RidECI...</div>
+        <div class="actions">
+          <div class="bell"></div>
+          <div class="avatar">JS</div>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- PASAJERO: Buscar viajes -->
+        <div class="page active" id="page-passenger-search">
+          <div class="page-head">
+            <div><h1>Buscar viajes</h1><p>Encuentra un viaje compatible con tu ruta</p></div>
+          </div>
+          <div class="filters">
+            <select><option>Filtrar por hora</option><option>Filtrar por destino</option><option>Filtrar por cercanía</option></select>
+            <input type="text" placeholder="Destino o punto de referencia">
+            <button class="btn btn-primary btn-sm">Buscar</button>
+          </div>
+
+          <div class="trip-card">
+            <div class="trip-info">
+              <div class="avatar">MC</div>
+              <div>
+                <div class="trip-route">Universidad → Chapinero</div>
+                <div class="trip-meta"><span>🕐 6:30 PM</span><span>👥 2 cupos</span><span>💲 $6.000</span><span class="badge badge-mint">ACTIVE</span></div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openReserve('Universidad → Chapinero','6:30 PM')">Reservar</button>
+          </div>
+
+          <div class="trip-card">
+            <div class="trip-info">
+              <div class="avatar" style="background:linear-gradient(135deg,var(--amber),var(--coral))">LP</div>
+              <div>
+                <div class="trip-route">Universidad → Suba</div>
+                <div class="trip-meta"><span>🕐 7:00 PM</span><span>👥 1 cupo</span><span>💲 $5.500</span><span class="badge badge-mint">ACTIVE</span></div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openReserve('Universidad → Suba','7:00 PM')">Reservar</button>
+          </div>
+
+          <div class="trip-card">
+            <div class="trip-info">
+              <div class="avatar" style="background:linear-gradient(135deg,var(--blue),var(--violet))">RG</div>
+              <div>
+                <div class="trip-route">Universidad → Kennedy</div>
+                <div class="trip-meta"><span>🕐 5:45 PM</span><span>👥 3 cupos</span><span>💲 $7.000</span><span class="badge badge-mint">ACTIVE</span></div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openReserve('Universidad → Kennedy','5:45 PM')">Reservar</button>
+          </div>
+        </div>
+
+        <!-- PASAJERO: Mis reservas -->
+        <div class="page" id="page-passenger-reservations">
+          <div class="page-head"><div><h1>Mis reservas</h1><p>Historial y reservas activas</p></div></div>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Viaje</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <tr><td>Universidad → Chapinero</td><td>13/07/2026</td><td><span class="badge badge-blue">CONFIRMED</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Cancelar</button></td></tr>
+                <tr><td>Universidad → Suba</td><td>10/07/2026</td><td><span class="badge badge-mint">COMPLETED</span></td>
+                  <td><button class="btn btn-primary btn-sm" onclick="openRating()">Calificar</button></td></tr>
+                <tr><td>Kennedy → Universidad</td><td>08/07/2026</td><td><span class="badge badge-coral">CANCELLED</span></td>
+                  <td><span style="color:var(--muted); font-size:13px;">—</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PASAJERO: Perfil -->
+        <div class="page" id="page-passenger-profile">
+          <div class="page-head"><div><h1>Mi perfil</h1><p>Reputación e historial</p></div></div>
+          <div class="grid grid-3">
+            <div class="card stat-card"><div class="label">Calificación promedio</div><div class="value">4.8 ★</div><div class="trend up">Basado en 22 viajes</div></div>
+            <div class="card stat-card"><div class="label">Viajes realizados</div><div class="value">22</div><div class="trend up">+3 este mes</div></div>
+            <div class="card stat-card"><div class="label">CO2 ahorrado</div><div class="value">14.2 kg</div><div class="trend up">↑ vs. mes anterior</div></div>
+          </div>
+        </div>
+
+        <!-- CONDUCTOR: Mis viajes -->
+        <div class="page" id="page-driver-trips">
+          <div class="page-head">
+            <div><h1>Mis viajes</h1><p>Viaje activo y pasajeros registrados</p></div>
+            <span class="badge badge-mint">1 viaje activo</span>
+          </div>
+          <div class="card" style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+              <div>
+                <div class="trip-route" style="font-size:18px;">Universidad → Chapinero</div>
+                <div class="trip-meta" style="margin-top:8px;"><span>🕐 6:30 PM</span><span>👥 2/4 cupos ocupados</span><span>💲 $6.000 c/u</span></div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-secondary btn-sm">Editar</button>
+                <button class="btn btn-secondary btn-sm" style="color:var(--coral); border-color:var(--coral);">Cancelar</button>
+              </div>
+            </div>
+            <p style="color:var(--muted); font-size:12px; margin-top:12px;">Edición/cancelación disponible hasta 30 min antes de la hora de inicio.</p>
+          </div>
+
+          <h3 style="font-size:15px; margin-bottom:12px; color:var(--muted);">Pasajeros registrados</h3>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Pasajero</th><th>Cupos</th><th>Estado de pago</th></tr></thead>
+              <tbody>
+                <tr><td>María Camila Torres</td><td>1</td><td><span class="badge badge-mint">CONFIRMED</span></td></tr>
+                <tr><td>Luis Fernando Prieto</td><td>1</td><td><span class="badge badge-amber">PENDING_PAYMENT</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CONDUCTOR: Crear viaje -->
+        <div class="page" id="page-driver-create">
+          <div class="page-head"><div><h1>Crear viaje</h1><p>Publica un nuevo trayecto para pasajeros</p></div></div>
+          <div class="card" style="max-width:560px;">
+            <div class="row-2">
+              <div class="field"><label>Fecha y hora</label><input type="datetime-local"></div>
+              <div class="field"><label>Cupos disponibles</label><input type="number" min="1" placeholder="Máx. capacidad del vehículo"></div>
+            </div>
+            <div class="field"><label>Origen</label><input type="text" placeholder="Universidad Escuela Colombiana de Ingeniería"></div>
+            <div class="field"><label>Destino</label><input type="text" placeholder="Dirección de destino"></div>
+            <div class="field"><label>Precio estimado por pasajero</label><input type="number" min="4000" placeholder="Mínimo $4.000"></div>
+            <p style="color:var(--muted); font-size:12px; margin:-4px 0 16px;">Disponible lunes–viernes 4:00am–9:00pm y sábados 4:00am–6:00pm. No puedes tener otro viaje activo.</p>
+            <button class="btn btn-primary">Publicar viaje</button>
+          </div>
+        </div>
+
+        <!-- CONDUCTOR: Vehículo -->
+        <div class="page" id="page-driver-vehicle">
+          <div class="page-head"><div><h1>Mi vehículo</h1><p>Información registrada y verificada</p></div></div>
+          <div class="card" style="max-width:420px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px;"><span style="color:var(--muted);">Marca</span><strong>Toyota</strong></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px;"><span style="color:var(--muted);">Modelo</span><strong>Corolla 2021</strong></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px;"><span style="color:var(--muted);">Color</span><strong>Blanco</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:var(--muted);">Puestos</span><strong>4</strong></div>
+          </div>
+        </div>
+
+        <!-- ADMIN: Validar usuarios -->
+        <div class="page" id="page-admin-validate">
+          <div class="page-head"><div><h1>Validar usuarios</h1><p>Cuentas de conductores pendientes de verificación</p></div></div>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Usuario</th><th>Rol</th><th>Vehículo</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <tr><td>Andrés Felipe Rojas</td><td>Conductor</td><td>Mazda 3</td><td><span class="badge badge-amber">VERIFICATION_PENDING</span></td>
+                  <td style="display:flex; gap:6px;"><button class="btn btn-primary btn-sm">Aprobar</button><button class="btn btn-secondary btn-sm">Suspender</button></td></tr>
+                <tr><td>Karol Estupiñán</td><td>Conductor</td><td>Chevrolet Spark</td><td><span class="badge badge-amber">VERIFICATION_PENDING</span></td>
+                  <td style="display:flex; gap:6px;"><button class="btn btn-primary btn-sm">Aprobar</button><button class="btn btn-secondary btn-sm">Suspender</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADMIN: Viajes activos -->
+        <div class="page" id="page-admin-trips">
+          <div class="page-head"><div><h1>Viajes activos</h1><p>Monitoreo de rutas y conflictos de horario</p></div></div>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Conductor</th><th>Ruta</th><th>Hora</th><th>Cupos</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>Mariana Castañeda</td><td>Universidad → Chapinero</td><td>6:30 PM</td><td>2/4</td><td><span class="badge badge-mint">ACTIVE</span></td></tr>
+                <tr><td>Luis Prieto</td><td>Universidad → Suba</td><td>7:00 PM</td><td>3/4</td><td><span class="badge badge-mint">ACTIVE</span></td></tr>
+                <tr><td>Ricardo Gómez</td><td>Universidad → Kennedy</td><td>5:45 PM</td><td>1/4</td><td><span class="badge badge-violet">CONFLICTO</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADMIN: Reportes -->
+        <div class="page" id="page-admin-reports">
+          <div class="page-head"><div><h1>Reportes</h1><p>Incidentes y reportes de seguridad</p></div></div>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Reportado por</th><th>Motivo</th><th>Fecha</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>María Camila Torres</td><td>Desviación de ruta</td><td>11/07/2026</td><td><span class="badge badge-amber">EN REVISIÓN</span></td></tr>
+                <tr><td>Sergio Idárraga</td><td>Comportamiento inadecuado</td><td>05/07/2026</td><td><span class="badge badge-mint">RESUELTO</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADMIN: Estadísticas -->
+        <div class="page" id="page-admin-stats">
+          <div class="page-head"><div><h1>Estadísticas y sostenibilidad</h1><p>Impacto ambiental y participación</p></div></div>
+          <div class="grid grid-3">
+            <div class="card stat-card">
+              <div class="label">CO2 ahorrado total</div><div class="value">312 kg</div><div class="trend up">↑ 8% este mes</div>
+              <div class="bar-chart"><div style="height:40%"></div><div style="height:60%"></div><div style="height:45%"></div><div style="height:80%"></div><div style="height:65%"></div><div style="height:90%"></div></div>
+            </div>
+            <div class="card stat-card">
+              <div class="label">Viajes compartidos</div><div class="value">1.284</div><div class="trend up">↑ 12% este mes</div>
+              <div class="bar-chart"><div style="height:50%; background:linear-gradient(180deg,var(--blue),var(--blue-dark))"></div><div style="height:70%; background:linear-gradient(180deg,var(--blue),var(--blue-dark))"></div><div style="height:55%; background:linear-gradient(180deg,var(--blue),var(--blue-dark))"></div><div style="height:85%; background:linear-gradient(180deg,var(--blue),var(--blue-dark))"></div><div style="height:60%; background:linear-gradient(180deg,var(--blue),var(--blue-dark))"></div><div style="height:95%; background:linear-gradient(180deg,var(--blue),var(--blue-dark))"></div>
+            </div>
+            </div>
+            <div class="card stat-card">
+              <div class="label">Nivel de participación</div><div class="value">68%</div><div class="trend up">Usuarios activos / total</div>
+              <div class="bar-chart"><div style="height:35%; background:linear-gradient(180deg,var(--violet),#5850B0)"></div><div style="height:55%; background:linear-gradient(180deg,var(--violet),#5850B0)"></div><div style="height:40%; background:linear-gradient(180deg,var(--violet),#5850B0)"></div><div style="height:68%; background:linear-gradient(180deg,var(--violet),#5850B0)"></div><div style="height:50%; background:linear-gradient(180deg,var(--violet),#5850B0)"></div><div style="height:72%; background:linear-gradient(180deg,var(--violet),#5850B0)"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat / Emergency (Módulo 5) -->
+  <div class="fab">
+    <button class="chat" title="Chat con el conductor/pasajero">💬</button>
+    <button class="emergency" title="Botón de emergencia">🚨</button>
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal-backdrop" id="reserve-modal">
+  <div class="modal">
+    <h3 id="reserve-title">Reservar viaje</h3>
+    <div class="field"><label>Cupos a reservar</label><input type="number" min="1" value="1"></div>
+    <div class="payment-opts">
+      <label><input type="radio" name="pay" checked> Nequi</label>
+      <label><input type="radio" name="pay"> Daviplata</label>
+      <label><input type="radio" name="pay"> Efectivo</label>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('reserve-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('reserve-modal')">Confirmar y pagar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="rating-modal">
+  <div class="modal">
+    <h3>Califica a tu conductor</h3>
+    <div class="stars" id="stars">
+      <span onclick="rate(1)">★</span><span onclick="rate(2)">★</span><span onclick="rate(3)">★</span><span onclick="rate(4)">★</span><span onclick="rate(5)">★</span>
+    </div>
+    <div class="field"><label>Comentario (opcional)</label><input type="text" maxlength="200" placeholder="Máx. 200 caracteres"></div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('rating-modal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('rating-modal')">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('login-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('auth-view').style.display = 'none';
+    document.getElementById('app-view').style.display = 'block';
+  });
+  document.getElementById('register-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('auth-view').style.display = 'none';
+    document.getElementById('app-view').style.display = 'block';
+  });
+  function showRegister(){ document.getElementById('login-form').style.display='none'; document.getElementById('register-form').style.display='block'; }
+  function showLogin(){ document.getElementById('register-form').style.display='none'; document.getElementById('login-form').style.display='block'; }
+  function logout(){ document.getElementById('app-view').style.display='none'; document.getElementById('auth-view').style.display='flex'; showLogin(); }
+
+  const roleDefaults = { passenger:'passenger-search', driver:'driver-trips', admin:'admin-validate' };
+  function setRole(role, btn){
+    document.querySelectorAll('.role-switch button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ['passenger','driver','admin'].forEach(r=>{
+      document.getElementById('nav-'+r).style.display = (r===role) ? 'flex' : 'none';
+    });
+    const firstBtn = document.querySelector('#nav-'+role+' button');
+    showPage(roleDefaults[role], firstBtn);
+  }
+  function showPage(id, btn){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    if(btn){
+      const parentNav = btn.closest('.navlist');
+      parentNav.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+  function openReserve(route, time){
+    document.getElementById('reserve-title').textContent = 'Reservar: ' + route + ' · ' + time;
+    document.getElementById('reserve-modal').classList.add('active');
+  }
+  function openRating(){ document.getElementById('rating-modal').classList.add('active'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+  function rate(n){
+    document.querySelectorAll('#stars span').forEach((s,i)=> s.classList.toggle('on', i<n));
+  }
+  document.querySelectorAll('.modal-backdrop').forEach(m=>{
+    m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('active'); });
+  });
+</script>
+</body>
+</html>

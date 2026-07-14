@@ -8,21 +8,25 @@ import 'theme.dart';
 /// in one place and styled with the dark passenger/landing design system,
 /// so we don't pull in the app-wide (light/dark toggle) dialogs used by
 /// the rest of the app and break visual consistency.
-void showActionSnack(BuildContext context, String message, {IconData icon = Icons.check_circle_rounded}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: LandingColors.bgSurface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: LandingColors.glassBorder)),
-      content: Row(
-        children: [
-          Icon(icon, size: 18, color: LandingColors.success),
-          const SizedBox(width: 10),
-          Expanded(child: Text(message, style: const TextStyle(color: Colors.white, fontSize: 12.5))),
-        ],
+void showActionSnack(BuildContext context, String message, {IconData icon = Icons.check_circle_rounded, SnackBarAction? action}) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: LandingColors.bgSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: LandingColors.glassBorder)),
+        duration: action != null ? const Duration(seconds: 4) : const Duration(seconds: 3),
+        action: action,
+        content: Row(
+          children: [
+            Icon(icon, size: 18, color: LandingColors.success),
+            const SizedBox(width: 10),
+            Expanded(child: Text(message, style: const TextStyle(color: Colors.white, fontSize: 12.5))),
+          ],
+        ),
       ),
-    ),
-  );
+    );
 }
 
 Future<void> showEmergencyDialog(BuildContext context) async {

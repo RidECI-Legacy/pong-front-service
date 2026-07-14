@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../components/glass_card.dart';
 import '../components/history_table.dart';
+import '../components/section_title.dart';
 import '../passenger_mock_helpers.dart';
-import '../theme.dart';
 
 /// SECTION "Historial": the full ride-history table.
 class HistorySection extends StatelessWidget {
@@ -15,9 +16,16 @@ class HistorySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Historial de viajes', style: LandingType.cardTitle(size: 18)),
-        const SizedBox(height: 16),
-        GlassCard(radius: 20, padding: const EdgeInsets.all(20), child: HistoryTable(rows: rows)),
+        SectionTitle(
+          icon: Icons.history_rounded,
+          title: 'Historial de viajes',
+          subtitle: '${rows.length} viaje${rows.length == 1 ? '' : 's'} completado${rows.length == 1 ? '' : 's'}',
+        ),
+        const SizedBox(height: 20),
+        GlassCard(radius: 20, padding: const EdgeInsets.all(20), child: HistoryTable(rows: rows))
+            .animate()
+            .fadeIn(duration: 300.ms, delay: 60.ms)
+            .slideY(begin: 0.05, curve: Curves.easeOutCubic),
       ],
     );
   }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../data/models.dart';
 import '../components/empty_state.dart';
 import '../components/reservation_card.dart';
+import '../components/section_title.dart';
 import '../passenger_actions.dart';
-import '../theme.dart';
 
 /// SECTION "Mis Reservas": the upcoming reservation plus quick pointers to
 /// past trips.
@@ -19,8 +19,8 @@ class ReservationsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Reserva activa', style: LandingType.cardTitle(size: 18)),
-        const SizedBox(height: 16),
+        const SectionTitle(icon: Icons.event_available_rounded, title: 'Mis reservas', subtitle: 'Tu próximo viaje y su estado en tiempo real'),
+        const SizedBox(height: 20),
         ReservationCard(
           trip: activeTrip,
           meetingPoint: 'Portal 80',
